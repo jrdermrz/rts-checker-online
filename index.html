@@ -517,6 +517,7 @@ input:focus-visible {
 
 .summary-cards {
   display: flex;
+  flex-wrap: wrap;
   border: 1px solid var(--line);
   border-radius: 14px 4px 14px 4px;
   background: var(--surface);
@@ -525,6 +526,7 @@ input:focus-visible {
 
 .summary-cards div {
   min-width: 110px;
+  flex: 1 1 110px;
   display: grid;
   gap: 5px;
   padding: 16px 20px;
@@ -885,9 +887,9 @@ footer span {
           <div class="required-columns">
             <span>REQUIRED COLUMNS</span>
             <ul>
-              <li>Order Status</li>
-              <li>Sender Name</li>
-              <li>Item Name</li>
+              <li>Status / Order Status</li>
+              <li>Warehouse / Sender Name / Chat Page</li>
+              <li>Product Name / Item Name</li>
             </ul>
           </div>
 
@@ -902,11 +904,11 @@ footer span {
         <div class="formula-strip" aria-label="Forecast formulas">
           <div>
             <span class="formula-icon delivery-icon" aria-hidden="true">D</span>
-            <p><strong>DELIVERY FORECAST</strong><span>Delivered rate × In Transit</span></p>
+            <p><strong>DELIVERY FORECAST</strong><span>Round down: Delivered rate × In Transit</span></p>
           </div>
           <div>
             <span class="formula-icon rts-icon" aria-hidden="true">R</span>
-            <p><strong>RTS FORECAST</strong><span>RTS rate × In Transit</span></p>
+            <p><strong>RTS FORECAST</strong><span>Round up: RTS rate × In Transit</span></p>
           </div>
           <p class="grouping-note">
             <strong>SMART PRODUCT GROUPING</strong>
@@ -920,12 +922,13 @@ footer span {
           <div>
             <span class="section-kicker">FORECAST REPORT</span>
             <h2>Page performance</h2>
-            <p>Rates are based on completed orders: Delivered ÷ (Delivered + RTS).</p>
+            <p>Completed orders = Delivered + Returned + Returning / For Return.</p>
           </div>
           <div class="summary-cards" aria-label="Report summary">
-            <div><span>PAGES</span><strong id="sender-total">0</strong></div>
-            <div><span>PRODUCTS</span><strong id="product-total">0</strong></div>
-            <div><span>IN TRANSIT</span><strong id="transit-total">0</strong></div>
+            <div><span>TOTAL PAGES</span><strong id="sender-total">0</strong></div>
+            <div><span>TOTAL PRODUCTS</span><strong id="product-total">0</strong></div>
+            <div><span>TOTAL IN TRANSIT</span><strong id="transit-total">0</strong></div>
+            <div><span>TOTAL SHIPMENTS</span><strong id="shipment-total">0</strong></div>
           </div>
         </div>
 
