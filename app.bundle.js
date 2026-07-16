@@ -470,6 +470,16 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
     return pageNameBySender.get(normaliseKey(sender)) ?? sender;
   }
 
+  const headerAliases = {
+    status: ["orderstatus", "status"],
+    sender: ["sendername", "warehouse", "chatpage"],
+    item: ["itemname", "productname"],
+  };
+
+  function findHeaderIndex(headers, aliases) {
+    return headers.findIndex((header) => aliases.includes(header));
+  }
+
   function classifyStatus(value) {
     const status = value
       .toLocaleLowerCase()
@@ -482,11 +492,19 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
       /\brts\b/.test(status) ||
       /\brto\b/.test(status) ||
       /return(?:ed)?\s+to\s+sender/.test(status) ||
-      /^return(?:ed)?$/.test(status)
+      /^return(?:ed)?$/.test(status) ||
+      /^returning$/.test(status) ||
+      /^for\s+return$/.test(status)
     ) {
       return "rts";
     }
-    if (/\bin\s+transit\b/.test(status) || status === "transit") return "inTransit";
+    if (
+      /\bin\s+transit\b/.test(status) ||
+      status === "transit" ||
+      /^shipped$/.test(status)
+    ) {
+      return "inTransit";
+    }
     return null;
   }
 
@@ -566,8 +584,8 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
           product,
           deliveredRate,
           rtsRate,
-          deliveryForecast: deliveredRate * group.inTransit,
-          rtsForecast: rtsRate * group.inTransit,
+          deliveryForecast: Math.floor(deliveredRate * group.inTransit),
+          rtsForecast: Math.ceil(rtsRate * group.inTransit),
         };
       })
       .sort((a, b) => {
@@ -591,8 +609,7 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
 
   function formatForecast(value) {
     return new Intl.NumberFormat("en", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      maximumFractionDigits: 0,
     }).format(value);
   }
 
@@ -644,18 +661,21 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
         });
         const headerRowIndex = rawRows.slice(0, 25).findIndex((row) => {
           const headers = row.map(normaliseHeader);
+          const statusIndex = findHeaderIndex(headers, headerAliases.status);
+          const senderIndex = findHeaderIndex(headers, headerAliases.sender);
+          const itemIndex = findHeaderIndex(headers, headerAliases.item);
           return (
-            headers.includes("orderstatus") &&
-            headers.includes("sendername") &&
-            headers.includes("itemname")
+            statusIndex !== -1 &&
+            senderIndex !== -1 &&
+            itemIndex !== -1
           );
         });
         if (headerRowIndex === -1) continue;
 
         const headers = rawRows[headerRowIndex].map(normaliseHeader);
-        const statusIndex = headers.indexOf("orderstatus");
-        const senderIndex = headers.indexOf("sendername");
-        const itemIndex = headers.indexOf("itemname");
+        const statusIndex = findHeaderIndex(headers, headerAliases.status);
+        const senderIndex = findHeaderIndex(headers, headerAliases.sender);
+        const itemIndex = findHeaderIndex(headers, headerAliases.item);
         const rows = rawRows
           .slice(headerRowIndex + 1)
           .map((row) => ({
@@ -670,7 +690,7 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
 
       if (!matched) {
         throw new Error(
-          'No sheet contains all three required columns: "Order Status", "Sender Name", and "Item Name".',
+          'No sheet contains the required columns: "Status"/"Order Status", "Warehouse"/"Sender Name"/"Chat Page", and "Product Name"/"Item Name".',
         );
       }
       if (!matched.rows.length) {
@@ -751,7 +771,9 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
 
   function renderReport() {
     if (!metrics.length) {
-      setError('No rows matched the statuses "Delivered", "RTS"/"Return to Sender", or "In Transit".');
+      setError(
+        'No rows matched Delivered, Returned/Returning/For Return, or In Transit/Shipped statuses.',
+      );
       return;
     }
 
@@ -761,6 +783,10 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
     const pages = new Set(metrics.map((item) => normaliseKey(item.pageName)));
     const products = new Set(metrics.map((item) => normaliseKey(item.product)));
     const transit = metrics.reduce((sum, item) => sum + item.inTransit, 0);
+    const shipments = metrics.reduce(
+      (sum, item) => sum + item.delivered + item.rts + item.inTransit,
+      0,
+    );
 
     senderFilter.replaceChildren();
     const allOption = document.createElement("option");
@@ -777,6 +803,7 @@ window.PAGE_NAME_BY_SENDER = Object.freeze({
     document.getElementById("sender-total").textContent = pages.size.toLocaleString();
     document.getElementById("product-total").textContent = products.size.toLocaleString();
     document.getElementById("transit-total").textContent = transit.toLocaleString();
+    document.getElementById("shipment-total").textContent = shipments.toLocaleString();
     productSearch.value = "";
     resultsSection.hidden = false;
     setError();
