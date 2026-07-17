@@ -1113,6 +1113,1140 @@ body.light-mode footer span {
     </main>
 
     <script>
+      (() => {
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeLabel = document.getElementById("theme-label");
+        const themeIcon = themeToggle.querySelector(".theme-icon");
+
+        themeToggle.addEventListener("click", () => {
+          const lightMode = document.body.classList.toggle("light-mode");
+          themeToggle.setAttribute("aria-pressed", String(lightMode));
+          themeToggle.setAttribute(
+            "aria-label",
+            lightMode ? "Switch to dark mode" : "Switch to light mode",
+          );
+          themeLabel.textContent = lightMode ? "DARK MODE" : "LIGHT MODE";
+          themeIcon.textContent = lightMode ? "\u263E" : "\u2600";
+        });
+      })();
+    </script>
+  </body>
+</html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RTS CHECKER — Delivered &amp; RTS Rates</title>
+    <meta
+      name="description"
+      content="Upload an order-status Excel file and check delivered rates, RTS rates, and in-transit forecasts for every page and product."
+    />
+    <meta property="og:title" content="RTS CHECKER — Delivered &amp; RTS Rates" />
+    <meta property="og:description" content="Fast Excel-powered delivered and RTS rate checking for e-commerce operations." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0yMiAxOS4yNzI3QzIyIDIwLjc3OSAyMC43NzkgMjIgMTkuMjcyNyAyMkgxNC43MjczQzEzLjIyMSAyMiAxMiAyMC43NzkgMTIgMTkuMjcyN1YxMkgxOS4yNzI3QzIwLjc3OSAxMiAyMiAxMy4yMjEgMjIgMTQuNzI3M1YxOS4yNzI3WiIgZmlsbD0iIzY4QzRGRiIvPg0KPHBhdGggZD0iTTIwIDJDMjEuMTA0NiAyIDIyIDIuODk1NDMgMjIgNFY3QzIyIDguMTA0NTcgMjEuMTA0NiA5IDIwIDlIMTdDMTUuODk1NCA5IDE1IDguMTA0NTcgMTUgN1Y0QzE1IDIuODk1NDMgMTUuODk1NCAyIDE3IDJIMjBaIiBmaWxsPSIjMEM3OUQ4Ii8+DQo8cGF0aCBkPSJNNyAxNUM4LjEwNDU3IDE1IDkgMTUuODk1NCA5IDE3VjIwQzkgMjEuMTA0NiA4LjEwNDU3IDIyIDcgMjJINEMyLjg5NTQzIDIyIDIgMjEuMTA0NiAyIDIwVjE3QzIgMTUuODk1NCAyLjg5NTQzIDE1IDQgMTVIN1oiIGZpbGw9IiMwQzc5RDgiLz4NCjxwYXRoIGQ9Ik0xMiAxMkg0LjcyNzI3QzMuMjIxMDQgMTIgMiAxMC43NzkgMiA5LjI3MjczVjQuNzI3MjdDMiAzLjIyMTA0IDMuMjIxMDQgMiA0LjcyNzI3IDJIOS4yNzI3M0MxMC43NzkgMiAxMiAzLjIyMTA0IDEyIDQuNzI3MjdWMTJaIiBmaWxsPSIjMkU5RUZGIi8+DQo8L3N2Zz4NCg==" />
+    <style>:root {
+  --ink: #eef6f3;
+  --muted: #99aaa6;
+  --paper: #070b0a;
+  --surface: #111817;
+  --line: #293431;
+  --mint: #36d7c1;
+  --mint-dark: #61e1ce;
+  --coral: #ff7549;
+  --coral-dark: #ff815e;
+  --red: #ff5d63;
+  --red-soft: rgba(255, 93, 99, 0.12);
+  --sky: #63c7ff;
+  --yellow: #f5c94c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+label[for="excel-upload"],
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site-header {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px clamp(22px, 5vw, 76px);
+  background: rgba(7, 11, 10, 0.9);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px 5px 12px 5px;
+  background: #172522;
+  color: var(--yellow);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  transform: rotate(-2deg);
+}
+
+.brand > span:last-child {
+  display: grid;
+  line-height: 1.05;
+}
+
+.brand strong {
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+
+.brand small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.privacy-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  border: 1px solid #28514b;
+  border-radius: 999px;
+  background: #10201d;
+  color: var(--mint);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.privacy-dot {
+  width: 8px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(30, 181, 164, 0.12);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(64px, 9vw, 112px) 22px 0;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(245, 201, 76, 0.08) 0 6%, transparent 20%),
+    linear-gradient(rgba(7, 11, 10, 0.84), rgba(7, 11, 10, 0.96)),
+    repeating-linear-gradient(90deg, transparent 0 71px, rgba(97, 225, 206, 0.035) 72px),
+    repeating-linear-gradient(0deg, transparent 0 71px, rgba(97, 225, 206, 0.035) 72px);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 68px;
+  right: -70px;
+  width: 230px;
+  height: 230px;
+  border: 38px solid rgba(54, 215, 193, 0.07);
+  border-radius: 50%;
+}
+
+.eyebrow,
+.hero h1,
+.hero-copy,
+.upload-card,
+.formula-strip {
+  width: min(100%, 920px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--mint-dark);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 24px;
+  height: 3px;
+  background: var(--coral);
+  transform: rotate(-10deg);
+}
+
+.hero h1 {
+  margin-top: 20px;
+  margin-bottom: 42px;
+  text-align: center;
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 0.96;
+  letter-spacing: -0.065em;
+}
+
+.hero h1 .delivered-word {
+  color: var(--sky);
+}
+
+.hero h1 .rts-word {
+  color: var(--red);
+}
+
+.hero-copy {
+  max-width: 650px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.65;
+}
+
+.upload-card {
+  position: relative;
+  z-index: 1;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: 24px 8px 24px 8px;
+  background: rgba(15, 22, 21, 0.97);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.upload-card.is-dragging {
+  border-color: var(--mint);
+  transform: translateY(-3px);
+  box-shadow: 0 24px 80px rgba(54, 215, 193, 0.12);
+}
+
+.upload-topline {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 20px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.step-number {
+  color: var(--coral);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+.upload-action-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-height: 112px;
+  padding: 18px;
+  border: 2px dashed #34534d;
+  border-radius: 16px 6px 16px 6px;
+  background: #0b1412;
+}
+
+.upload-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 23px;
+  border-radius: 10px 3px 10px 3px;
+  background: #11786d;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  box-shadow: 0 8px 20px rgba(13, 111, 103, 0.18);
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background: #159486;
+  transform: translateY(-1px);
+}
+
+.upload-button:focus-visible,
+.generate-button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(30, 181, 164, 0.3);
+  outline-offset: 3px;
+}
+
+.upload-arrow {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.file-copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.file-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.file-copy span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ready-badge {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(54, 215, 193, 0.14);
+  color: var(--mint);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.required-columns {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 17px;
+  padding-bottom: 19px;
+  border-bottom: 1px solid var(--line);
+}
+
+.required-columns > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+}
+
+.required-columns ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.required-columns li {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #141d1b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #bac7c4;
+  font-size: 10px;
+}
+
+.error-message {
+  margin: 15px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--red);
+  background: var(--red-soft);
+  color: #ff9ba0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.generate-button {
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+  border: 0;
+  border-radius: 12px 4px 12px 4px;
+  background: var(--coral);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  box-shadow: 0 10px 24px rgba(255, 111, 61, 0.22);
+  transition: background 160ms ease, transform 160ms ease, opacity 160ms ease;
+}
+
+.generate-button span {
+  font-size: 20px;
+}
+
+.generate-button:hover:not(:disabled) {
+  background: #ef5728;
+  transform: translateY(-1px);
+}
+
+.generate-button:disabled {
+  background: #28302f;
+  color: #74817e;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.formula-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.45fr;
+  gap: 28px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 23px 4px 42px;
+}
+
+.formula-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.formula-icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.delivery-icon {
+  background: rgba(54, 215, 193, 0.14);
+  color: var(--mint);
+}
+
+.rts-icon {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.formula-strip p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+
+.formula-strip strong {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.formula-strip p span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.grouping-note {
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+}
+
+.results-section {
+  scroll-margin-top: 20px;
+  padding: clamp(58px, 8vw, 92px) clamp(18px, 5vw, 76px) 80px;
+  background: #090e0d;
+}
+
+.results-heading,
+.table-toolbar,
+.table-shell {
+  width: min(100%, 1320px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.results-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+}
+
+.section-kicker {
+  color: var(--coral-dark);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.results-heading h2 {
+  margin: 8px 0 8px;
+  font-size: clamp(31px, 4vw, 46px);
+  letter-spacing: -0.045em;
+}
+
+.results-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-cards {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 14px 4px 14px 4px;
+  background: var(--surface);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.24);
+}
+
+.summary-cards div {
+  min-width: 110px;
+  flex: 1 1 110px;
+  display: grid;
+  gap: 5px;
+  padding: 16px 20px;
+}
+
+.summary-cards div + div {
+  border-left: 1px solid var(--line);
+}
+
+.summary-cards span {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.summary-cards strong {
+  font-size: 23px;
+  letter-spacing: -0.04em;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 13px;
+  margin-top: 34px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+}
+
+.table-toolbar label {
+  display: grid;
+  gap: 6px;
+}
+
+.table-toolbar label > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.table-toolbar select,
+.table-toolbar input {
+  height: 40px;
+  border: 1px solid #35423f;
+  border-radius: 7px;
+  background: #0b1211;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.table-toolbar select {
+  min-width: 220px;
+  padding: 0 34px 0 11px;
+}
+
+.search-field {
+  flex: 1;
+}
+
+.table-toolbar input {
+  width: min(100%, 330px);
+  padding: 0 12px;
+}
+
+.row-count {
+  margin: 0 0 12px auto;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.table-shell {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 0 0 14px 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
+}
+
+table {
+  width: 100%;
+  min-width: 910px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 17px 19px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  border-bottom: 1px solid var(--line);
+  background: #0d1413;
+  color: #9baba7;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+}
+
+td {
+  border-bottom: 1px solid #212b29;
+  font-variant-numeric: tabular-nums;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover td {
+  background: #141d1b;
+}
+
+td:first-child {
+  min-width: 240px;
+}
+
+td strong {
+  display: block;
+  font-size: 14px;
+}
+
+td:not(:first-child) strong {
+  font-size: 16px;
+}
+
+td span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.item-label {
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 4px;
+  background: rgba(54, 215, 193, 0.12);
+  color: var(--mint);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.rts-column {
+  color: var(--red);
+  background: linear-gradient(90deg, transparent, rgba(255, 93, 99, 0.055));
+}
+
+th.rts-column {
+  background: var(--red-soft);
+}
+
+.rts-column span {
+  color: #ff9a9f;
+}
+
+.no-results {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px clamp(22px, 5vw, 76px);
+  background: #040706;
+  color: white;
+}
+
+footer strong {
+  letter-spacing: -0.03em;
+}
+
+footer span {
+  color: #b5c4c1;
+  font-size: 12px;
+}
+
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--mint);
+  color: var(--mint-dark);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid rgba(30, 181, 164, 0.3);
+  outline-offset: 3px;
+}
+
+.theme-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+body.light-mode {
+  --ink: #10201c;
+  --muted: #62736e;
+  --paper: #f3f7f6;
+  --surface: #ffffff;
+  --line: #d4dfdc;
+  --mint-dark: #087a6e;
+  color-scheme: light;
+}
+
+body.light-mode .site-header {
+  background: rgba(243, 247, 246, 0.92);
+}
+
+body.light-mode .brand-mark {
+  background: #e3eeeb;
+}
+
+body.light-mode .privacy-pill {
+  border-color: #b8d5cf;
+  background: #e8f4f1;
+  color: #087a6e;
+}
+
+body.light-mode .hero {
+  background:
+    radial-gradient(circle at 12% 14%, rgba(245, 201, 76, 0.14) 0 6%, transparent 20%),
+    linear-gradient(rgba(243, 247, 246, 0.88), rgba(243, 247, 246, 0.97)),
+    repeating-linear-gradient(90deg, transparent 0 71px, rgba(8, 122, 110, 0.045) 72px),
+    repeating-linear-gradient(0deg, transparent 0 71px, rgba(8, 122, 110, 0.045) 72px);
+}
+
+body.light-mode .upload-card,
+body.light-mode .summary-cards,
+body.light-mode .table-toolbar,
+body.light-mode .table-shell {
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 18px 55px rgba(31, 57, 50, 0.1);
+}
+
+body.light-mode .upload-action-row,
+body.light-mode .required-columns li,
+body.light-mode .table-toolbar select,
+body.light-mode .table-toolbar input {
+  background: #f7faf9;
+  color: var(--ink);
+}
+
+body.light-mode .upload-action-row {
+  border-color: #b8ccc7;
+}
+
+body.light-mode .required-columns li {
+  color: #40534e;
+}
+
+body.light-mode .generate-button:disabled {
+  background: #dfe7e5;
+  color: #84918e;
+}
+
+body.light-mode .results-section {
+  background: #edf3f1;
+}
+
+body.light-mode th {
+  background: #f0f5f3;
+  color: #536660;
+}
+
+body.light-mode td {
+  border-bottom-color: #dde6e3;
+}
+
+body.light-mode tbody tr:hover td {
+  background: #f2f7f5;
+}
+
+body.light-mode .item-label {
+  background: rgba(8, 122, 110, 0.1);
+  color: #087a6e;
+}
+
+body.light-mode footer {
+  background: #e2ebe8;
+  color: var(--ink);
+}
+
+body.light-mode footer span {
+  color: var(--muted);
+}
+
+@media (max-width: 800px) {
+  .site-header {
+    min-height: 72px;
+  }
+
+  .privacy-pill {
+    font-size: 0;
+    padding: 10px;
+  }
+
+  .privacy-dot {
+    width: 9px;
+    height: 9px;
+  }
+
+  .hero {
+    padding-top: 58px;
+  }
+
+  .upload-action-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .upload-button {
+    grid-column: 1 / -1;
+  }
+
+  .formula-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grouping-note {
+    grid-column: 1 / -1;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .results-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .summary-cards {
+    width: 100%;
+  }
+
+  .summary-cards div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .table-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .table-toolbar select,
+  .table-toolbar input {
+    width: 100%;
+    max-width: none;
+  }
+
+  .row-count {
+    margin: 4px 0 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .upload-card {
+    padding: 19px;
+  }
+
+  .required-columns {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .formula-strip {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .grouping-note {
+    grid-column: auto;
+  }
+
+  .summary-cards div {
+    padding: 13px 11px;
+  }
+
+  .summary-cards strong {
+    font-size: 19px;
+  }
+
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+    <script src="./app.bundle.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="RTS CHECKER home">
+          <span class="brand-mark" aria-hidden="true">RTS</span>
+          <span>
+            <strong>RTS CHECKER</strong>
+            <small>Delivered &amp; RTS intelligence</small>
+          </span>
+        </a>
+        <div class="header-actions">
+          <span class="privacy-pill">
+            <span class="privacy-dot" aria-hidden="true"></span>
+            Your file stays on this device
+          </span>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            type="button"
+            aria-pressed="false"
+            aria-label="Switch to light mode"
+          >
+            <span class="theme-icon" aria-hidden="true">☀</span>
+            <span id="theme-label">LIGHT MODE</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="hero" id="top">
+        <div class="eyebrow"><span></span> FAST RTS CHECKER</div>
+        <h1>
+          DETERMINE YOUR<br />
+          <span class="delivered-word">DELIVERED</span> AND <span class="rts-word">RTS</span> RATES
+        </h1>
+
+        <div class="upload-card" id="upload-card">
+          <div class="upload-topline">
+            <span class="step-number">01</span>
+            <span>SELECT YOUR ORDER EXPORT</span>
+          </div>
+
+          <div class="upload-action-row">
+            <label class="upload-button" for="excel-upload">
+              <input
+                class="file-input"
+                id="excel-upload"
+                type="file"
+                accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                aria-label="Upload Excel file"
+              />
+              <span class="upload-arrow" aria-hidden="true">↑</span>
+              UPLOAD FILE
+            </label>
+            <div class="file-copy" id="file-copy" aria-live="polite">
+              <strong>Choose a file or drop it here</strong>
+              <span>.XLSX or .XLS only · Required columns listed below</span>
+            </div>
+            <span class="ready-badge" id="ready-badge" hidden>READY</span>
+          </div>
+
+          <div class="required-columns">
+            <span>REQUIRED COLUMNS</span>
+            <ul>
+              <li>Status / Order Status</li>
+              <li>Warehouse / Sender Name / Chat Page</li>
+              <li>Product Name / Item Name</li>
+            </ul>
+          </div>
+
+          <p class="error-message" id="error-message" role="alert" hidden></p>
+
+          <button class="generate-button" id="generate-button" type="button" disabled>
+            GENERATE
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="formula-strip" aria-label="Forecast formulas">
+          <div>
+            <span class="formula-icon delivery-icon" aria-hidden="true">D</span>
+            <p><strong>DELIVERY FORECAST</strong><span>Round down: Delivered rate × In Transit</span></p>
+          </div>
+          <div>
+            <span class="formula-icon rts-icon" aria-hidden="true">R</span>
+            <p><strong>RTS FORECAST</strong><span>Round up: RTS rate × In Transit</span></p>
+          </div>
+          <p class="grouping-note">
+            <strong>SMART PRODUCT GROUPING</strong>
+            <span>Offers, quantities, colors, sizes, and other variants roll up to the same item.</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="results-section" id="results" hidden>
+        <div class="results-heading">
+          <div>
+            <span class="section-kicker">FORECAST REPORT</span>
+            <h2>Page performance</h2>
+            <p>Completed orders = Delivered + Returned + Returning / For Return.</p>
+          </div>
+          <div class="summary-cards" aria-label="Report summary">
+            <div><span>TOTAL PAGES</span><strong id="sender-total">0</strong></div>
+            <div><span>TOTAL PRODUCTS</span><strong id="product-total">0</strong></div>
+            <div><span>TOTAL IN TRANSIT</span><strong id="transit-total">0</strong></div>
+            <div><span>TOTAL SHIPMENTS</span><strong id="shipment-total">0</strong></div>
+          </div>
+        </div>
+
+        <div class="table-toolbar">
+          <label>
+            <span>Page</span>
+            <select id="sender-filter">
+              <option value="all">All page names</option>
+            </select>
+          </label>
+          <label class="search-field">
+            <span>Find product</span>
+            <input id="product-search" type="search" placeholder="Search product name" />
+          </label>
+          <p class="row-count" id="row-count">0 product rows</p>
+        </div>
+
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>PAGE NAME</th>
+                <th>DELIVERED RATE</th>
+                <th class="rts-column">RTS RATE</th>
+                <th>DELIVERY FORECAST</th>
+                <th class="rts-column">RTS FORECAST</th>
+              </tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+          </table>
+          <div class="no-results" id="no-results" hidden>No products match the current filters.</div>
+        </div>
+      </section>
+
+      <footer>
+        <strong>RTS CHECKER</strong>
+        <span>Private, browser-based order forecasting.</span>
+      </footer>
+    </main>
+
+    <script>
       document.addEventListener("DOMContentLoaded", () => {
         const themeToggle = document.getElementById("theme-toggle");
         const themeLabel = document.getElementById("theme-label");
